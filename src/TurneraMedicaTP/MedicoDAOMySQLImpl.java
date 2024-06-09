@@ -11,7 +11,7 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 
 	public void createMedico(Medico medico) {
 		String nombreCompleto = medico.getNombreCompleto();
-		Integer matricula = medico.getMatricula();
+		String matricula = medico.getMatricula();
 		String especialidad = medico.getEspecialidad();
 		double precioConsulta = medico.getPrecioConsulta();
 		
@@ -34,7 +34,7 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 			rs = s.executeQuery(sql);
 			if (rs.next()) {
 				String nombreCompleto = rs.getString("nombreCompleto");
-				Integer m = rs.getInt("matricula");
+				String m = rs.getString("matricula");
 				String especialidad = rs.getString("especialidad");
 				double precioConsulta = rs.getDouble("precioConsulta");
 				
@@ -51,7 +51,7 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 
 	public void updateMedico(Medico medico) {
 		String nombreCompleto = medico.getNombreCompleto();
-		Integer matricula = medico.getMatricula();
+		String matricula = medico.getMatricula();
 		String especialidad = medico.getEspecialidad();
 		double precioConsulta = medico.getPrecioConsulta();
 		
@@ -81,7 +81,7 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 			rs = s.executeQuery(sql);
 			while (rs.next()) {
 				String nombreCompleto = rs.getString("nombreCompleto");
-				Integer matricula = rs.getInt("matricula");
+				String matricula = rs.getString("matricula");
 				String especialidad = rs.getString("especialidad");
 				double precioConsulta = rs.getDouble("precioConsulta");
 				

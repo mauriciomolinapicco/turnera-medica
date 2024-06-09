@@ -2,14 +2,14 @@ package TurneraMedicaTP;
 
 public class Medico {
 	private String nombreCompleto;
-	private Integer matricula;
+	private String matricula;
 	private String especialidad;
 	private double precioConsulta;
 	
 	public Medico() {
 	}
 	
-	public Medico(String nombre, Integer matricula, String especialidad, double precioConsulta) {
+	public Medico(String nombre, String matricula, String especialidad, double precioConsulta) {
 		this.nombreCompleto = nombre;
 		this.matricula = matricula;
 		this.especialidad = especialidad;
@@ -20,7 +20,7 @@ public class Medico {
 		return especialidad;
 	}
 	
-	public Integer getMatricula() {
+	public String getMatricula() {
 		return matricula;
 	}
 	
@@ -36,7 +36,7 @@ public class Medico {
 		this.especialidad = especialidad;
 	}
 	
-	public void setMatricula(Integer matricula) {
+	public void setMatricula(String matricula) {
 		this.matricula = matricula;
 	}
 	
