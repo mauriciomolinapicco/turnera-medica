@@ -101,4 +101,9 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 		return lista;
 	}
 
+	public boolean existeMatricula(String matricula) {
+		Medico medico = getMedico(matricula);
+		return matricula != null ? true : false;
+	}
+
 }

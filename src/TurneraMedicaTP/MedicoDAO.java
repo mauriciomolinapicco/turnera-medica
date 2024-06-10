@@ -14,4 +14,6 @@ public interface MedicoDAO {
 	
 	List<Medico> getAllMedicos();
 	
+	boolean existeMatricula(String matricula);
+	
 }

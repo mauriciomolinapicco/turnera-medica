@@ -6,7 +6,24 @@ import java.util.List;
 import javax.swing.*;
 
 public class Main {
+	private PanelManager manager;
+	
 	public static void main(String[] args) {
+		
+		Main ppal = new Main();
+		ppal.iniciarManager();
+	}
+	
+	public void iniciarManager() {
+		manager = new PanelManager();
+		manager.armarManager();
+		manager.mostrarPanelMedicos();
+		manager.showFrame();
+	}
+	
+	
+		
+		
 		/*JFrame frame = new JFrame("Turnera Medica");
 		frame.add(new TablaMedicosPanel());
 		frame.add(new JButton("Hola"));
@@ -14,7 +31,7 @@ public class Main {
 		frame.pack();
 		frame.setVisible(true);*/
 
-		JPanel panelCrearMedico = new CrearMedicoPanel();
+		/*JPanel panelCrearMedico = new CrearMedicoPanel();
 		JPanel panelMedicos = new TablaMedicosPanel();
 		panelMedicos.setBackground(new Color(105,105,105));
 		panelCrearMedico.setBackground(new Color(169,169,169));
@@ -29,7 +46,7 @@ public class Main {
 		//f.setLayout(null);
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.add(panelMedicos);
-		f.add(panelCrearMedico);
+		f.add(panelCrearMedico);*/
 		
 		/*
 		JFrame f = new JFrame("Turnera medica");
@@ -69,5 +86,4 @@ public class Main {
 		} 
 		*
 		*/
-	}
 }
