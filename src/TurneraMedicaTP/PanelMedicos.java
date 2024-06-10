@@ -17,6 +17,8 @@ public class PanelMedicos extends JPanel implements ActionListener {
 	
 	private JButton botonCrear;
 	private JButton botonActualizar;
+	private JButton botonBuscar;
+
 	
 	private JTextField nombreField;
 	private JTextField matriculaField;
@@ -45,6 +47,31 @@ public class PanelMedicos extends JPanel implements ActionListener {
 		this.especialidadField = new JTextField(40);
 		this.precioConsultaField = new JTextField(40);
 		
+		modelo = new MedicoTableModel();
+		tabla= new JTable(modelo);
+		
+		scrollPane = new JScrollPane(tabla);
+		
+		
+		MedicoDAOMySQLImpl bdd = new MedicoDAOMySQLImpl();
+		List<Medico> lista = new ArrayList<Medico>();
+		
+		//Probablemente tenga q hacer try catch aca
+		lista = bdd.getAllMedicos();
+		
+		borrarBtn = new JButton("Borrar medico seleccionado");
+		
+		//Busqueda por matricula
+		
+		
+		botonBuscar = new JButton("Buscar medico");
+		
+		borrarBtn.addActionListener(this);
+		botonCrear.addActionListener(this);
+		botonActualizar.addActionListener(this);
+		botonBuscar.addActionListener(this);
+
+		
 		this.add(nombreLbl);
 		this.add(nombreField);
 		this.add(matriculaLbl);
@@ -55,25 +82,9 @@ public class PanelMedicos extends JPanel implements ActionListener {
 		this.add(precioConsultaField);
 		this.add(botonCrear);
 		this.add(botonActualizar);
-
-		
-		modelo = new MedicoTableModel();
-		tabla= new JTable(modelo);
-		
-		scrollPane = new JScrollPane(tabla);
 		this.add(scrollPane);
-		
-		MedicoDAOMySQLImpl bdd = new MedicoDAOMySQLImpl();
-		List<Medico> lista = new ArrayList<Medico>();
-		
-		//Probablemente tenga q hacer trty catch aca
-		lista = bdd.getAllMedicos();
-		
-		borrarBtn = new JButton("Borrar medico");
 		this.add(borrarBtn);
-		borrarBtn.addActionListener(this);
-		botonCrear.addActionListener(this);
-		botonActualizar.addActionListener(this);
+		this.add(botonBuscar);
 		
 		modelo.setContenido(lista);
 		modelo.fireTableDataChanged();
@@ -116,10 +127,8 @@ public class PanelMedicos extends JPanel implements ActionListener {
 			JOptionPane.showMessageDialog(PanelMedicos.this,"Medico "+medico.getMatricula()+" eliminado");
 			modelo.getContenido().remove(filaSeleccionada);
 			modelo.fireTableDataChanged();
+		} else if (e.getSource() == botonBuscar) {
+			panelManager.mostrarPanelBusqueda();
 		}
-		
 	}
-	
-	
-	
 }
