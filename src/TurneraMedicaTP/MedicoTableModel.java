@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-public class MedicoTableModel extends AbstractTableModel {
-
+public class MedicoTableModel extends BaseTableModel<Medico>{
+	//extends AbstractTableModel 
 	private static final int COLUMNA_NOMBRE= 0;
 	private static final int COLUMNA_MATRICULA = 1;
 	private static final int COLUMNA_ESPECIALIDAD = 2;

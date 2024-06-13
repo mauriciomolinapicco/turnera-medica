@@ -1,0 +1,139 @@
+package TurneraMedicaTP;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+public abstract class PanelBase<T> extends JPanel implements ActionListener {
+    protected JTable tabla;
+    protected BaseTableModel<T> modelo;
+    protected JScrollPane scrollPane;
+    protected JButton borrarBtn;
+    protected JButton botonCrear;
+    protected JButton botonActualizar;
+    protected JButton botonBuscar;
+    protected JTextField nombreField;
+    protected JTextField idField; 
+    protected JTextField fieldTres;
+    protected JTextField fieldCuatro; 
+
+    protected abstract String getNombreLabelText();
+    protected abstract String getIdLabelText();
+    protected abstract String getFieldTresLabelText();
+    protected abstract String getFieldCuatroLabelText();
+    protected abstract BaseTableModel<T> createTableModel();
+    protected abstract DAO<T> createDAO();
+    protected abstract T createEntityFromFields();
+    protected abstract String getEntityId(T entity);
+
+    public PanelBase() {
+        super();
+    }
+
+    public void armarPanel() {
+        this.setLayout(new FlowLayout());
+
+        botonCrear = new JButton("Crear");
+        botonActualizar = new JButton("Actualizar");
+
+        JLabel nombreLbl = new JLabel(getNombreLabelText());
+        JLabel idLbl = new JLabel(getIdLabelText());
+        JLabel fieldTresLbl = new JLabel(getFieldTresLabelText());
+        JLabel fieldCuatroLbl = new JLabel(getFieldCuatroLabelText());
+
+        this.nombreField = new JTextField(40);
+        this.idField = new JTextField(40);
+        this.fieldTres = new JTextField(40);
+        this.fieldCuatro = new JTextField(40);
+
+        modelo = createTableModel();
+        tabla = new JTable(modelo);
+
+        scrollPane = new JScrollPane(tabla);
+
+        DAO<T> dao = createDAO();
+        List<T> lista = null;
+		try {
+			lista = dao.getAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+        borrarBtn = new JButton("Borrar seleccionado");
+
+        botonBuscar = new JButton("Buscar");
+
+        borrarBtn.addActionListener(this);
+        botonCrear.addActionListener(this);
+        botonActualizar.addActionListener(this);
+        botonBuscar.addActionListener(this);
+
+        this.add(nombreLbl);
+        this.add(nombreField);
+        this.add(idLbl);
+        this.add(idField);
+        this.add(fieldTresLbl);
+        this.add(fieldTres);
+        this.add(fieldCuatroLbl);
+        this.add(fieldCuatro);
+        this.add(botonCrear);
+        this.add(botonActualizar);
+        this.add(scrollPane);
+        this.add(borrarBtn);
+        this.add(botonBuscar);
+
+        modelo.setContenido(lista);
+        modelo.fireTableDataChanged();
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == botonCrear || e.getSource() == botonActualizar) {
+            T entity = createEntityFromFields();
+            DAO<T> dao = createDAO();
+            if (e.getSource() == botonCrear) {
+                try {
+					dao.create(entity);
+					JOptionPane.showMessageDialog(this, "Creado");
+	                modelo.getContenido().add(entity);
+	                modelo.fireTableDataChanged();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+                
+            } else {
+                try {
+					dao.update(entity);
+					JOptionPane.showMessageDialog(this, "Actualizado");
+	                modelo.fireTableDataChanged();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+                
+            }
+        } else if (e.getSource() == borrarBtn) {
+            int filaSeleccionada = tabla.getSelectedRow();
+            if (filaSeleccionada >= 0) {
+                try {
+                    T entity = modelo.getContenido().get(filaSeleccionada);
+                    DAO<T> dao = createDAO();
+                    String entityId = getEntityId(entity); 
+					dao.delete(entityId);
+					JOptionPane.showMessageDialog(this, "Eliminado");
+	                modelo.getContenido().remove(filaSeleccionada);
+	                modelo.fireTableDataChanged();
+				} catch (Exception e1) {
+					
+					JOptionPane.showMessageDialog(this, "hubo un error a le hora de eliminar de la base de datos");
+					e1.printStackTrace();
+				}
+                
+            }
+        } else if (e.getSource() == botonBuscar) {
+            mostrarPanelBusqueda();
+        }
+    }
+    
+    protected abstract void mostrarPanelBusqueda();
+}

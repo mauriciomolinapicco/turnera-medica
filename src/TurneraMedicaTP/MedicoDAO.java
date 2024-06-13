@@ -2,17 +2,17 @@ package TurneraMedicaTP;
 
 import java.util.List;
 
-public interface MedicoDAO {
+public interface MedicoDAO extends DAO<Medico> {
 	//CRUD => create, read, update, delete
-	void createMedico(Medico medico);
+	void create(Medico medico) throws DAOException;
 	
-	Medico getMedico(String matricula);
+	Medico get(String matricula) throws DAOException;
 	
-	void updateMedico(Medico medico);
+	void update(Medico medico) throws DAOException;
 	
-	void deleteMedico(String matricula);
+	void delete(String matricula) throws DAOException;
 	
-	List<Medico> getAllMedicos();
+	List<Medico> getAll() throws DAOException;
 	
 	boolean existeMatricula(String matricula);
 	

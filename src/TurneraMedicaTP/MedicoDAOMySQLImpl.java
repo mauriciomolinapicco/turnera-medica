@@ -9,24 +9,27 @@ import java.util.List;
 
 public class MedicoDAOMySQLImpl implements MedicoDAO{
 
-	public void createMedico(Medico medico) {
-		String nombreCompleto = medico.getNombreCompleto();
-		String matricula = medico.getMatricula();
-		String especialidad = medico.getEspecialidad();
-		double precioConsulta = medico.getPrecioConsulta();
-		
-        String sql = "INSERT INTO medicos (nombreCompleto, matricula, especialidad, precioConsulta) " +
-                "VALUES ('" + nombreCompleto + "', '" + matricula + "', '" + especialidad + "', '" + precioConsulta + "')";
-        ConnectionFactory.transaccion(sql);        
+	public void create(Medico medico) throws DAOException {
+        try {
+        	String nombreCompleto = medico.getNombreCompleto();
+    		String matricula = medico.getMatricula();
+    		String especialidad = medico.getEspecialidad();
+    		double precioConsulta = medico.getPrecioConsulta();
+    		
+            String sql = "INSERT INTO medicos (nombreCompleto, matricula, especialidad, precioConsulta) " +
+                    "VALUES ('" + nombreCompleto + "', '" + matricula + "', '" + especialidad + "', '" + precioConsulta + "')";
+			ConnectionFactory.transaccion(sql);
+		} catch (SQLException e) {
+			throw new DAOException("Hubo un error creando el medico en la BDD", e);
+		}        
 	}
 
-	public Medico getMedico(String matricula) {
+	public Medico get(String matricula) throws DAOException {
 		String sql = "SELECT * FROM medicos WHERE matricula = '" +matricula+ "'";
 		Medico medico = null;
 
 		Connection c = null;
 		ResultSet rs = null;
-		
 		
 		try {
 			c = ConnectionFactory.connect();
@@ -41,32 +44,40 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 				medico = new Medico(nombreCompleto, m, especialidad, precioConsulta);
 				c.close();
 			}
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
+		} catch (SQLException e) {
+			throw new DAOException("Hubo un error creando el medico en la BDD", e);
 		} 
 		
 		return medico;
-
 	}
 
-	public void updateMedico(Medico medico) {
-		String nombreCompleto = medico.getNombreCompleto();
-		String matricula = medico.getMatricula();
-		String especialidad = medico.getEspecialidad();
-		double precioConsulta = medico.getPrecioConsulta();
+	public void update(Medico medico) throws DAOException {
 		
-		String sql = "UPDATE medicos SET nombreCompleto = '" +nombreCompleto+ 
-				"', especialidad = '" +especialidad+ "', precioConsulta = '" +precioConsulta+"' WHERE matricula = '"+matricula+ "'";
-		
-		ConnectionFactory.transaccion(sql);
+		try {
+			String nombreCompleto = medico.getNombreCompleto();
+			String matricula = medico.getMatricula();
+			String especialidad = medico.getEspecialidad();
+			double precioConsulta = medico.getPrecioConsulta();
+			
+			String sql = "UPDATE medicos SET nombreCompleto = '" +nombreCompleto+ 
+					"', especialidad = '" +especialidad+ "', precioConsulta = '" +
+					precioConsulta+"' WHERE matricula = '"+matricula+ "'";
+			ConnectionFactory.transaccion(sql);
+		} catch (DAOException e) {
+			throw new DAOException("Hubo un error al actualizar el medico", e);
+		}
 	}
 
-	public void deleteMedico(String matricula) {
-		String sql = "DELETE FROM medicos WHERE matricula = '" +matricula+ "'";
-		ConnectionFactory.transaccion(sql);
+	public void delete(String matricula) throws DAOException {
+		try {
+			String sql = "DELETE FROM medicos WHERE matricula = '" +matricula+ "'";
+			ConnectionFactory.transaccion(sql);
+		} catch (SQLException e) {
+			throw new DAOException("Hubo un error creando el medico en la BDD", e);
+		}
 	}
 
-	public List<Medico> getAllMedicos() {
+	public List<Medico> getAll() throws DAOException {
 		String sql = "SELECT * FROM medicos";
 		List<Medico> lista = new ArrayList<>();
 		//ResultSet rs = ConnectionFactory.consulta(sql); 
@@ -88,7 +99,7 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 				Medico medico = new Medico(nombreCompleto, matricula, especialidad, precioConsulta);
 				lista.add(medico);
 			}
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		} 
 		
@@ -102,8 +113,13 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 	}
 
 	public boolean existeMatricula(String matricula) {
-		Medico medico = getMedico(matricula);
-		return matricula != null ? true : false;
+		Medico medico = null;
+		try {
+			medico = get(matricula);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		return medico != null ? true : false;
 	}
 
 }

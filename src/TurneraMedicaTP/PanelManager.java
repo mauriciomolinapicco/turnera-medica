@@ -8,15 +8,15 @@ import javax.swing.JPanel;
 
 public class PanelManager {
 	private JFrame frame;
-	private PanelMedicos panelMedicos;
-	private BusquedaMedicoPanel panelBusquedaMedicos;
+	private NuevoPanelMedicos panelMedicos;
+	private NuevoBusquedaMedicoPanel panelBusquedaMedicos;
 	
 	public PanelManager() {
 	}
 	
 	public void armarManager() {
-		panelMedicos = new PanelMedicos(this);
-		panelBusquedaMedicos = new BusquedaMedicoPanel(this);
+		panelMedicos = new NuevoPanelMedicos(this);
+		panelBusquedaMedicos = new NuevoBusquedaMedicoPanel(this);
 		
 		panelMedicos.armarPanel();
 		panelBusquedaMedicos.armarPanel();
@@ -41,10 +41,12 @@ public class PanelManager {
 		frame.getContentPane().repaint();
 	}
 	
-	public void mostrarPanelBusqueda() {
-		frame.getContentPane().removeAll();
-		frame.getContentPane().add(panelBusquedaMedicos);
-		frame.getContentPane().validate();
-		frame.getContentPane().repaint();
-	}
+	
+    public void mostrarPanelBusquedaMedicos() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(panelBusquedaMedicos);
+        frame.getContentPane().validate();
+        frame.getContentPane().repaint();
+    }
+
 }

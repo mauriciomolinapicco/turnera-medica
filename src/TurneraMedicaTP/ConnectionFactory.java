@@ -12,18 +12,26 @@ public class ConnectionFactory {
 	private static final String PASSWORD = "mec1303";
 	private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/turnera";
 	
-	public static Connection connect() throws SQLException, ClassNotFoundException {
-		//DEBERIA GESTIONAR LAS EXCEPTIONS
+	public static Connection connect() throws DAOException{
+		Connection connection = null;
+
+		try {
+			Class.forName(DB_DRIVER);
+			connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+			connection.setAutoCommit(false);
+		}  catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            throw new DAOException("No se encontro el driver de la base de datos", e);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new DAOException("Error al conectar a la base de datos", e);
+        }
 		
-		
-		Class.forName(DB_DRIVER);
-		Connection connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
-		connection.setAutoCommit(false);
 		return connection;
 	}
 	
 	
-	public static void transaccion(String sentenciaSQL) {
+	public static void transaccion(String sentenciaSQL) throws DAOException {
 		Connection c = null;
 		
 		try {
@@ -33,51 +41,59 @@ public class ConnectionFactory {
 			c.commit();
 			System.out.println("Transaccion realizada con exito!");
 			
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-			try {
-				if (c != null) {
-					c.rollback();
-				}
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
+			rollbackConexion(c);
+			throw new DAOException("Hubo un error durante la transaccion");
 		} finally {
-			try {
-				if (c != null) {
-					c.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			cerrarConexion(c);
 		}
 	}
 	
 	
-	public static ResultSet consulta(String sentenciaSQL) {
+	public static ResultSet consulta(String sentenciaSQL) throws DAOException {
 		Connection c = null;
 		ResultSet rs = null;
-		
 		
 		try {
 			c = connect();
 			Statement s = c.createStatement();
 			rs = s.executeQuery(sentenciaSQL);
-		} catch (ClassNotFoundException | SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
+			rollbackConexion(c);
+			throw new DAOException("Hubo un error durante la consulta");
 		} finally {
-			try {
-				if (c != null) {
-					c.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			cerrarConexion(c);
 		}
 		return rs;
 
 	}
 	
+	
+	public static void cerrarConexion(Connection connection) throws DAOException {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new DAOException("Hubo un error cerrando la conexion", e);
+            }
+        }
+    }
+
+	
+	public static void rollbackConexion(Connection connection) throws DAOException {
+        if (connection != null) {
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                throw new DAOException("Hubo un error haciendo el rollback", e);
+            }
+        }
+    }
+
 	
 	public static void main(String[] args) throws Exception{
 		Connection con = connect();
