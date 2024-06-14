@@ -92,7 +92,17 @@ public class PanelMedicos extends PanelBase<Medico> {
 			e.printStackTrace();
 		}
 		
-		return medico == null ? true : false;
+		return medico == null ? false : true;
+	}
+
+	@Override
+	protected String mensajeYaExiste() {
+		return "Ya existe un medico con la matricula proporcionada";
+	}
+
+	@Override
+	protected String mensajeNoExiste() {
+		return "No existe ningun medico con esta matricula";
 	}
 
 	

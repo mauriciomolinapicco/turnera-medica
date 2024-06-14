@@ -31,6 +31,8 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     protected abstract String mensajeCreado();
     protected abstract String mensajeActualizado();
     protected abstract String mensajeBorrado();
+    protected abstract String mensajeYaExiste();
+    protected abstract String mensajeNoExiste();
 
     public PanelBase() {
         super();
@@ -98,33 +100,33 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
             DAO<T> dao = createDAO();
             if (e.getSource() == botonCrear) {
             	if (entityExists(idField.getText())) {
-            		
-            		
-            		
-            		//manejar el caso de si ya existe un medico
-            		
-            		
-            		
+            		JOptionPane.showMessageDialog(this, mensajeYaExiste(), "Error",JOptionPane.ERROR_MESSAGE);
+            	} else {
+            		try {
+    					dao.create(entity);
+    					JOptionPane.showMessageDialog(this, mensajeCreado());
+    	                modelo.getContenido().add(entity);
+    	                modelo.fireTableDataChanged();
+    				} catch (Exception e1) {
+    					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de insertar a la base de datos","Error", JOptionPane.ERROR_MESSAGE);
+    					e1.printStackTrace();
+    				}
             	}
-                try {
-					dao.create(entity);
-					JOptionPane.showMessageDialog(this, mensajeCreado());
-	                modelo.getContenido().add(entity);
-	                modelo.fireTableDataChanged();
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de insertar a la base de datos");
-					e1.printStackTrace();
-				}
+                
                 
             } else {
-                try {
-					dao.update(entity);
-					JOptionPane.showMessageDialog(this, mensajeActualizado());
-	                modelo.fireTableDataChanged();
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de actualizar de la base de datos");
-					e1.printStackTrace();
-				}
+            	if (!entityExists(idField.getText())) {
+            		JOptionPane.showMessageDialog(this, mensajeNoExiste(), "Error",JOptionPane.ERROR_MESSAGE);
+            	} else {
+            		try {
+     					dao.update(entity);
+     					JOptionPane.showMessageDialog(this, mensajeActualizado());
+     	                refreshTableData();
+     				} catch (Exception e1) {
+     					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de actualizar de la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
+     				}
+            	}
+               
                 
             }
         } else if (e.getSource() == borrarBtn) {
@@ -139,10 +141,12 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
 	                modelo.getContenido().remove(filaSeleccionada);
 	                modelo.fireTableDataChanged();
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de eliminar de la base de datos");
+					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de borrar de la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 				}
                 
+            } else {
+            	JOptionPane.showMessageDialog(this, "Debe seleccionar una fila con el registro a borrar", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else if (e.getSource() == botonBuscar) {
             mostrarPanelBusqueda();
@@ -150,4 +154,16 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     }
     
     protected abstract void mostrarPanelBusqueda();
+    
+    private void refreshTableData() {
+        DAO<T> dao = createDAO();
+        try {
+            List<T> lista = dao.getAll(); 
+            modelo.setContenido(lista); 
+            modelo.fireTableDataChanged();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Hubo un error al actualizar la tabla", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }
