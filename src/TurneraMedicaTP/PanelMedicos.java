@@ -79,7 +79,7 @@ public class PanelMedicos extends PanelBase<Medico> {
 	
 	@Override
 	protected String mensajeBorrado() {
-		return "Medico creado con exito!";
+		return "Medico eliminado con exito!";
 	}
 
 	@Override

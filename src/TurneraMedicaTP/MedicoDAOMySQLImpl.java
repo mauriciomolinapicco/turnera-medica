@@ -27,7 +27,6 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 	public Medico get(String matricula) throws DAOException {
 		String sql = "SELECT * FROM medicos WHERE matricula = '" +matricula+ "'";
 		Medico medico = null;
-
 		Connection c = null;
 		ResultSet rs = null;
 		
@@ -42,14 +41,16 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 				double precioConsulta = rs.getDouble("precioConsulta");
 				
 				medico = new Medico(nombreCompleto, m, especialidad, precioConsulta);
-				c.close();
 			}
 		} catch (SQLException e) {
 			throw new DAOException("Hubo un error creando el medico en la BDD", e);
-		} 
+		} finally {
+			ConnectionFactory.cerrarConexion(c);
+		}
 		
 		return medico;
 	}
+	
 
 	public void update(Medico medico) throws DAOException {
 		
@@ -76,16 +77,14 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 			throw new DAOException("Hubo un error creando el medico en la BDD", e);
 		}
 	}
+	
 
 	public List<Medico> getAll() throws DAOException {
 		String sql = "SELECT * FROM medicos";
 		List<Medico> lista = new ArrayList<>();
-		//ResultSet rs = ConnectionFactory.consulta(sql); 
-		
 		Connection c = null;
 		ResultSet rs = null;
-		
-		
+	
 		try {
 			c = ConnectionFactory.connect();
 			Statement s = c.createStatement();
@@ -100,13 +99,9 @@ public class MedicoDAOMySQLImpl implements MedicoDAO{
 				lista.add(medico);
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
-		
-		try {
-			c.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new DAOException("Hubo un error a la hora de obtener la lista de medicos", e);
+		} finally {
+			ConnectionFactory.cerrarConexion(c);
 		}
 		
 		return lista;
