@@ -2,11 +2,11 @@ package TurneraMedicaTP;
 
 import javax.swing.JOptionPane;
 
-public class NuevoPanelMedicos extends PanelBase<Medico> {
+public class PanelMedicos extends PanelBase<Medico> {
 	private PanelManager panelManager;
 
 
-    public NuevoPanelMedicos(PanelManager m) {
+    public PanelMedicos(PanelManager m) {
         super();
         this.panelManager = m;
     }
@@ -50,7 +50,7 @@ public class NuevoPanelMedicos extends PanelBase<Medico> {
 		try {
 			precioConsulta = Double.parseDouble(fieldCuatro.getText());
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(NuevoPanelMedicos.this, "Ingrese un número válido para el precio", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(PanelMedicos.this, "Ingrese un número válido para el precio", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         return new Medico(nombre, matricula, especialidad, precioConsulta);
@@ -65,6 +65,34 @@ public class NuevoPanelMedicos extends PanelBase<Medico> {
 	@Override
 	protected void mostrarPanelBusqueda() {
 		panelManager.mostrarPanelBusquedaMedicos();
+	}
+
+	@Override
+	protected String mensajeCreado() {
+		return "Medico creado con exito!";
+	}
+	
+	@Override
+	protected String mensajeActualizado() {
+		return "Medico actualizado con exito!";
+	}
+	
+	@Override
+	protected String mensajeBorrado() {
+		return "Medico creado con exito!";
+	}
+
+	@Override
+	protected boolean entityExists(String id) {
+		MedicoDAO dao = createDAO();
+		Medico medico = null;
+		try {
+			medico = dao.get(id);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		
+		return medico == null ? true : false;
 	}
 
 	

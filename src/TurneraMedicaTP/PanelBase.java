@@ -27,6 +27,10 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     protected abstract DAO<T> createDAO();
     protected abstract T createEntityFromFields();
     protected abstract String getEntityId(T entity);
+    protected abstract boolean entityExists(String id);
+    protected abstract String mensajeCreado();
+    protected abstract String mensajeActualizado();
+    protected abstract String mensajeBorrado();
 
     public PanelBase() {
         super();
@@ -93,21 +97,32 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
             T entity = createEntityFromFields();
             DAO<T> dao = createDAO();
             if (e.getSource() == botonCrear) {
+            	if (entityExists(idField.getText())) {
+            		
+            		
+            		
+            		//manejar el caso de si ya existe un medico
+            		
+            		
+            		
+            	}
                 try {
 					dao.create(entity);
-					JOptionPane.showMessageDialog(this, "Creado");
+					JOptionPane.showMessageDialog(this, mensajeCreado());
 	                modelo.getContenido().add(entity);
 	                modelo.fireTableDataChanged();
 				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de insertar a la base de datos");
 					e1.printStackTrace();
 				}
                 
             } else {
                 try {
 					dao.update(entity);
-					JOptionPane.showMessageDialog(this, "Actualizado");
+					JOptionPane.showMessageDialog(this, mensajeActualizado());
 	                modelo.fireTableDataChanged();
 				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de actualizar de la base de datos");
 					e1.printStackTrace();
 				}
                 
@@ -120,12 +135,11 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
                     DAO<T> dao = createDAO();
                     String entityId = getEntityId(entity); 
 					dao.delete(entityId);
-					JOptionPane.showMessageDialog(this, "Eliminado");
+					JOptionPane.showMessageDialog(this, mensajeBorrado());
 	                modelo.getContenido().remove(filaSeleccionada);
 	                modelo.fireTableDataChanged();
 				} catch (Exception e1) {
-					
-					JOptionPane.showMessageDialog(this, "hubo un error a le hora de eliminar de la base de datos");
+					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de eliminar de la base de datos");
 					e1.printStackTrace();
 				}
                 

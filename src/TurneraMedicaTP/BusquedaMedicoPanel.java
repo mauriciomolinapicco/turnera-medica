@@ -1,9 +1,9 @@
 package TurneraMedicaTP;
 import javax.swing.*;
 
-public class NuevoBusquedaMedicoPanel extends BusquedaPanel<Medico> {
+public class BusquedaMedicoPanel extends BusquedaPanel<Medico> {
 
-    public NuevoBusquedaMedicoPanel(PanelManager m) {
+    public BusquedaMedicoPanel(PanelManager m) {
         super(m);
     }
 
