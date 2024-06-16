@@ -24,7 +24,6 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     protected abstract String getFieldTresLabelText();
     protected abstract String getFieldCuatroLabelText();
     protected abstract BaseTableModel<T> createTableModel();
-    protected abstract DAO<T> createDAO();
     protected abstract T createEntityFromFields();
     protected abstract String getEntityId(T entity);
     protected abstract boolean entityExists(String id);
@@ -33,6 +32,7 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     protected abstract String mensajeBorrado();
     protected abstract String mensajeYaExiste();
     protected abstract String mensajeNoExiste();
+    protected abstract Service<T> createService();
 
     public PanelBase() {
         super();
@@ -59,11 +59,11 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
 
         scrollPane = new JScrollPane(tabla);
 
-        DAO<T> dao = createDAO();
+        Service<T> service = createService();
         List<T> lista = null;
 		try {
-			lista = dao.getAll();
-		} catch (Exception e) {
+			lista = service.getAll();
+		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
 
@@ -93,54 +93,44 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
         modelo.setContenido(lista);
         modelo.fireTableDataChanged();
     }
-
+    
+    
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == botonCrear || e.getSource() == botonActualizar) {
-            T entity = createEntityFromFields();
-            DAO<T> dao = createDAO();
-            if (e.getSource() == botonCrear) {
-            	if (entityExists(idField.getText())) {
-            		JOptionPane.showMessageDialog(this, mensajeYaExiste(), "Error",JOptionPane.ERROR_MESSAGE);
-            	} else {
-            		try {
-    					dao.create(entity);
-    					JOptionPane.showMessageDialog(this, mensajeCreado());
-    	                modelo.getContenido().add(entity);
-    	                modelo.fireTableDataChanged();
-    				} catch (Exception e1) {
-    					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de insertar a la base de datos","Error", JOptionPane.ERROR_MESSAGE);
-    					e1.printStackTrace();
-    				}
-            	}
-                
-                
-            } else {
-            	if (!entityExists(idField.getText())) {
-            		JOptionPane.showMessageDialog(this, mensajeNoExiste(), "Error",JOptionPane.ERROR_MESSAGE);
-            	} else {
-            		try {
-     					dao.update(entity);
-     					JOptionPane.showMessageDialog(this, mensajeActualizado());
-     	                refreshTableData();
-     				} catch (Exception e1) {
-     					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de actualizar de la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
-     				}
-            	}
-               
-                
-            }
+    	if (e.getSource() == botonCrear) {
+    		T entity = createEntityFromFields();
+    		Service<T> service = createService();
+    		try {
+    			service.create(entity);
+    			JOptionPane.showMessageDialog(this, mensajeCreado());
+                modelo.getContenido().add(entity);
+                modelo.fireTableDataChanged();
+    		} catch (ServiceException e1) {
+    			JOptionPane.showMessageDialog(this, mensajeYaExiste(), "Error",JOptionPane.ERROR_MESSAGE);
+    		}
+    	} else if (e.getSource() == botonActualizar) {
+    		T entity = createEntityFromFields();
+    		Service<T> service = createService();
+    		try {
+    			service.update(entity);
+    			JOptionPane.showMessageDialog(this, mensajeActualizado());
+    			refreshTableData();
+    		} catch (ServiceException e1) {
+    			JOptionPane.showMessageDialog(this, mensajeYaExiste(), "Error",JOptionPane.ERROR_MESSAGE);
+    		}
+    	}  else if (e.getSource() == botonBuscar) {
+            mostrarPanelBusqueda();
         } else if (e.getSource() == borrarBtn) {
-            int filaSeleccionada = tabla.getSelectedRow();
+        	int filaSeleccionada = tabla.getSelectedRow();
             if (filaSeleccionada >= 0) {
                 try {
-                    T entity = modelo.getContenido().get(filaSeleccionada);
-                    DAO<T> dao = createDAO();
+                	T entity = modelo.getContenido().get(filaSeleccionada);
+                    Service<T> service = createService();
                     String entityId = getEntityId(entity); 
-					dao.delete(entityId);
+					service.delete(entityId);
 					JOptionPane.showMessageDialog(this, mensajeBorrado());
 	                modelo.getContenido().remove(filaSeleccionada);
 	                modelo.fireTableDataChanged();
-				} catch (Exception e1) {
+				} catch (ServiceException e1) {
 					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de borrar de la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
 				}
@@ -148,20 +138,18 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
             } else {
             	JOptionPane.showMessageDialog(this, "Debe seleccionar una fila con el registro a borrar", "Error", JOptionPane.ERROR_MESSAGE);
             }
-        } else if (e.getSource() == botonBuscar) {
-            mostrarPanelBusqueda();
-        }
+        }		
     }
     
     protected abstract void mostrarPanelBusqueda();
     
     private void refreshTableData() {
-        DAO<T> dao = createDAO();
+        Service<T> service = createService();
         try {
-            List<T> lista = dao.getAll(); 
+            List<T> lista = service.getAll(); 
             modelo.setContenido(lista); 
             modelo.fireTableDataChanged();
-        } catch (Exception e) {
+        } catch (ServiceException e) {
             JOptionPane.showMessageDialog(this, "Hubo un error al actualizar la tabla", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }

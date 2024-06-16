@@ -37,11 +37,6 @@ public class PanelMedicos extends PanelBase<Medico> {
     }
 
     @Override
-    protected MedicoDAO createDAO() {
-        return new MedicoDAOMySQLImpl();
-    }
-
-    @Override
     protected Medico createEntityFromFields() {
         String nombre = nombreField.getText();
         String matricula = idField.getText();
@@ -54,7 +49,6 @@ public class PanelMedicos extends PanelBase<Medico> {
         }
 
         return new Medico(nombre, matricula, especialidad, precioConsulta);
-        
     }
 
 	@Override
@@ -84,14 +78,13 @@ public class PanelMedicos extends PanelBase<Medico> {
 
 	@Override
 	protected boolean entityExists(String id) {
-		MedicoDAO dao = createDAO();
+		Service<Medico> service = createService();
 		Medico medico = null;
 		try {
-			medico = dao.get(id);
-		} catch (DAOException e) {
+			medico = service.get(id);
+		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
-		
 		return medico == null ? false : true;
 	}
 
@@ -103,6 +96,11 @@ public class PanelMedicos extends PanelBase<Medico> {
 	@Override
 	protected String mensajeNoExiste() {
 		return "No existe ningun medico con esta matricula";
+	}
+
+	@Override
+	protected Service<Medico> createService() {
+		return new MedicoService();
 	}
 
 	
