@@ -77,28 +77,6 @@ public class PanelMedicos extends PanelBase<Medico> {
 	}
 
 	@Override
-	protected boolean entityExists(String id) {
-		Service<Medico> service = createService();
-		Medico medico = null;
-		try {
-			medico = service.get(id);
-		} catch (ServiceException e) {
-			e.printStackTrace();
-		}
-		return medico == null ? false : true;
-	}
-
-	@Override
-	protected String mensajeYaExiste() {
-		return "Ya existe un medico con la matricula proporcionada";
-	}
-
-	@Override
-	protected String mensajeNoExiste() {
-		return "No existe ningun medico con esta matricula";
-	}
-
-	@Override
 	protected Service<Medico> createService() {
 		return new MedicoService();
 	}

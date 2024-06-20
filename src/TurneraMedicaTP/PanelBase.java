@@ -26,12 +26,9 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     protected abstract BaseTableModel<T> createTableModel();
     protected abstract T createEntityFromFields();
     protected abstract String getEntityId(T entity);
-    protected abstract boolean entityExists(String id);
     protected abstract String mensajeCreado();
     protected abstract String mensajeActualizado();
     protected abstract String mensajeBorrado();
-    protected abstract String mensajeYaExiste();
-    protected abstract String mensajeNoExiste();
     protected abstract Service<T> createService();
 
     public PanelBase() {
@@ -105,7 +102,7 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
                 modelo.getContenido().add(entity);
                 modelo.fireTableDataChanged();
     		} catch (ServiceException e1) {
-    			JOptionPane.showMessageDialog(this, mensajeYaExiste(), "Error",JOptionPane.ERROR_MESSAGE);
+    			JOptionPane.showMessageDialog(this, e1.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
     		}
     	} else if (e.getSource() == botonActualizar) {
     		T entity = createEntityFromFields();
@@ -115,7 +112,7 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     			JOptionPane.showMessageDialog(this, mensajeActualizado());
     			refreshTableData();
     		} catch (ServiceException e1) {
-    			JOptionPane.showMessageDialog(this, mensajeYaExiste(), "Error",JOptionPane.ERROR_MESSAGE);
+    			JOptionPane.showMessageDialog(this, e1.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
     		}
     	}  else if (e.getSource() == botonBuscar) {
             mostrarPanelBusqueda();
@@ -131,10 +128,8 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
 	                modelo.getContenido().remove(filaSeleccionada);
 	                modelo.fireTableDataChanged();
 				} catch (ServiceException e1) {
-					JOptionPane.showMessageDialog(this, "Hubo un error a la hora de borrar de la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
-					e1.printStackTrace();
+					JOptionPane.showMessageDialog(this, e1.getMessage() , "Error", JOptionPane.ERROR_MESSAGE);
 				}
-                
             } else {
             	JOptionPane.showMessageDialog(this, "Debe seleccionar una fila con el registro a borrar", "Error", JOptionPane.ERROR_MESSAGE);
             }

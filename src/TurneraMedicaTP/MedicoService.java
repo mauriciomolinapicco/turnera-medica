@@ -11,10 +11,14 @@ public class MedicoService implements Service<Medico> {
 	}
 	
 	public void create(Medico medico) throws ServiceException {
-		try {
-			dao.create(medico);
-		} catch (DAOException e) {
-			throw new ServiceException("Hubo un error creando el medico", e);
+		if (medicoExiste(medico.getMatricula())) {
+			throw new ServiceException("Ya existe un medico con la matricula ingresada");
+		} else {
+			try {
+				dao.create(medico);
+			} catch (DAOException e) {
+				throw new ServiceException("Hubo un error creando el medico", e);
+			}
 		}
 	}
 	
@@ -29,11 +33,17 @@ public class MedicoService implements Service<Medico> {
 	}
 
 	public void update(Medico medico) throws ServiceException {
-		try {
-			dao.update(medico);
-		} catch (DAOException e) {
-			throw new ServiceException("Error actualizando el medico", e);
+		if (medicoExiste(medico.getMatricula())) {
+			try {
+				dao.update(medico);
+			} catch (DAOException e) {
+				throw new ServiceException("Error actualizando el medico", e);
+			}
+		} else {
+			throw new ServiceException("No existe ningun medico con la matricula ingresadada");
 		}
+		
+		
 	}
 	
 	public void delete(String matricula) throws ServiceException {
@@ -52,6 +62,16 @@ public class MedicoService implements Service<Medico> {
 			throw new ServiceException("Error obteniendo la lista de medicos", e);
 		}
 		return medicos;
+	}
+	
+	public boolean medicoExiste(String matricula) {
+		Medico medico = null;
+		try {
+			medico = this.get(matricula);
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+		return medico == null ? false : true;
 	}
 	
 	
