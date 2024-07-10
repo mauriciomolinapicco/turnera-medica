@@ -12,7 +12,7 @@ import java.util.List;
 public class ConnectionFactory {
 	private static final String DB_DRIVER = "com.mysql.jdbc.Driver";
 	private static final String USERNAME = "root";
-	private static final String PASSWORD = "mec1303";
+	private static final String PASSWORD = "12345678";
 	private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/turnera";
 	
 	public static Connection connect() throws DAOException{

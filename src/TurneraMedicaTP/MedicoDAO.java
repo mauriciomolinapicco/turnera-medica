@@ -2,7 +2,7 @@ package TurneraMedicaTP;
 
 import java.util.List;
 
-public interface MedicoDAO extends DAO<Medico> {
+public interface MedicoDAO {
 	//CRUD => create, read, update, delete
 	void create(Medico medico) throws DAOException;
 	

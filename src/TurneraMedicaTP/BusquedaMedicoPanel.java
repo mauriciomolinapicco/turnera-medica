@@ -9,10 +9,10 @@ public class BusquedaMedicoPanel extends BusquedaPanel<Medico> {
 
     @Override
     protected Medico buscarEntidad(String matricula) {
-        MedicoDAO dao = new MedicoDAOMySQLImpl();
+        MedicoService service = new MedicoService();
         try {
-			return dao.get(matricula);
-		} catch (DAOException e) {
+			return service.get(matricula);
+		} catch (ServiceException e) {
 			e.printStackTrace();
 		}
         return null;
