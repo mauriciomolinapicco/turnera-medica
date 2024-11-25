@@ -16,17 +16,20 @@ import java.awt.event.ActionListener;
 public class PanelManager {
 	private JFrame frame;
 	private PanelMedicos panelMedicos;
-	private BusquedaMedicoPanel panelBusquedaMedicos;
+	private PanelBusquedaMedico panelBusquedaMedicos;
+	private PanelPacientes panelPacientes;
 	
 	public PanelManager() {
 	}
 	
 	public void armarManager() {
 		panelMedicos = new PanelMedicos(this);
-		panelBusquedaMedicos = new BusquedaMedicoPanel(this);
+		panelPacientes = new PanelPacientes(this);
+		panelBusquedaMedicos = new PanelBusquedaMedico(this);
 		
 		panelMedicos.armarPanel();
 		panelBusquedaMedicos.armarPanel();
+		panelPacientes.armarPanel();
 		
 		panelMedicos.setBackground(new Color(250,250,250));
 		
@@ -38,8 +41,9 @@ public class PanelManager {
 		
 		//cuando el menu de la app contenga mas elementos seria bueno separar esta logica
 		JMenuBar menuBar = new JMenuBar();
+		
+		//Menu de medicos (navbar)
         JMenu menuMedicos = new JMenu("Medicos");
-
         JMenuItem medicoMenuItem = new JMenuItem("Panel de Médicos");
         medicoMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -53,10 +57,22 @@ public class PanelManager {
         		mostrarPanelBusquedaMedicos();
         	}
         });
-        
         menuMedicos.add(medicoMenuItem);
         menuMedicos.add(busquedaMedicoMenuItem);
+        
+        
+        //Menu de pacientes
+        JMenu menuPacientes = new JMenu("Pacientes");
+        JMenuItem pacienteMenuItem = new JMenuItem("Panel de pacientes");
+        pacienteMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		mostrarPanelPacientes();
+        	}
+        });
+        menuPacientes.add(pacienteMenuItem);
+        
         menuBar.add(menuMedicos);
+        menuBar.add(menuPacientes);
         frame.setJMenuBar(menuBar);
 	}
 	
@@ -72,6 +88,12 @@ public class PanelManager {
 		frame.getContentPane().repaint();
 	}
 	
+	public void mostrarPanelPacientes() {
+		frame.getContentPane().removeAll();
+		frame.getContentPane().add(panelPacientes);
+		frame.getContentPane().validate();
+		frame.getContentPane().repaint();
+	}
 	
     public void mostrarPanelBusquedaMedicos() {
         frame.getContentPane().removeAll();

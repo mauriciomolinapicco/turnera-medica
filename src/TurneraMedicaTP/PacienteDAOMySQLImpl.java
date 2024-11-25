@@ -25,7 +25,7 @@ public class PacienteDAOMySQLImpl implements PacienteDAO{
 	}
 
 	public Paciente get(String dni) throws DAOException {
-		String sql = "SELECT * FROM pacientes WHERE matricula = '" +dni+ "'";
+		String sql = "SELECT * FROM pacientes WHERE dni = '" +dni+ "'";
 		Paciente paciente = null;
 		Connection c = null;
 		ResultSet rs = null;
@@ -91,7 +91,7 @@ public class PacienteDAOMySQLImpl implements PacienteDAO{
 			rs = s.executeQuery(sql);
 			while (rs.next()) {
 				String dni = rs.getString("dni");
-				String nombreCompleto = rs.getString("nombreCompleto ");
+				String nombreCompleto = rs.getString("nombreCompleto");
 				String fichaMedica = rs.getString("fichaMedica");
 				int telefono = rs.getInt("telefono");
 				

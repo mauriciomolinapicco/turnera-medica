@@ -17,7 +17,7 @@ public class Main {
 	public void iniciarManager() {
 		manager = new PanelManager();
 		manager.armarManager();
-		manager.mostrarPanelMedicos();
+		manager.mostrarPanelPacientes();
 		manager.showFrame();
 	}
 }
