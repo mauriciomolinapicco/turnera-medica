@@ -19,9 +19,10 @@ public class PanelManager {
 	private PanelBusquedaMedico panelBusquedaMedicos;
 	private PanelBusquedaPacientes panelBusquedaPacientes;
 	private PanelPacientes panelPacientes;
-	private PanelTurnos panelTurnos;
-	
-    private PanelBuscarTurnos panelBusquedaTurnos; // NUEVO: Panel para buscar turnos
+	private PanelTurnos panelTurnos;	
+    private PanelBuscarTurnos panelBusquedaTurnos; 
+    private PanelBuscarTurnosPorPaciente panelBusquedaTurnosPaciente;
+    private PanelCalcularCobroMedico panelReporteCobro;
 
 	
 	public PanelManager() {
@@ -34,6 +35,8 @@ public class PanelManager {
 		panelBusquedaPacientes= new PanelBusquedaPacientes(this);
 		panelTurnos = new PanelTurnos(this);
 		panelBusquedaTurnos = new PanelBuscarTurnos(this);
+		panelBusquedaTurnosPaciente = new PanelBuscarTurnosPorPaciente(this);
+		panelReporteCobro = new PanelCalcularCobroMedico(this);
 		
 		panelMedicos.armarPanel();
 		panelBusquedaMedicos.armarPanel();
@@ -41,7 +44,8 @@ public class PanelManager {
 		panelPacientes.armarPanel();
 		panelTurnos.armarPanel();
 		panelBusquedaTurnos.armarPanel();
-		
+		panelBusquedaTurnosPaciente.armarPanel();
+		panelReporteCobro.armarPanel();
 		
 		
 		panelMedicos.setBackground(new Color(250,250,250));
@@ -92,7 +96,7 @@ public class PanelManager {
         });
         menuPacientes.add(busquedaPacientesMenuItem);
 
-
+        // menu de los turnos
         JMenu menuTurnos = new JMenu("Turnos");
         JMenuItem turnosMenuItem = new JMenuItem("Panel de turnos");
         turnosMenuItem.addActionListener(new ActionListener() {
@@ -103,21 +107,44 @@ public class PanelManager {
         menuTurnos.add(turnosMenuItem);
         
         
-        JMenuItem buscarTurnosMenuItem = new JMenuItem("Buscar turnos");
+        JMenuItem buscarTurnosMenuItem = new JMenuItem("Buscar turnos de un medico");
         buscarTurnosMenuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                mostrarPanelBuscarTurnos(); // Llama al nuevo método
+                mostrarPanelBuscarTurnos(); 
             }
         });
         menuTurnos.add(turnosMenuItem);
-        menuTurnos.add(buscarTurnosMenuItem); // NUEVO: Añadir al menú
-
+        menuTurnos.add(buscarTurnosMenuItem); 
 
         
+        JMenuItem buscarTurnosPacienteMenuItem = new JMenuItem("Buscar turnos por paciente");
+        buscarTurnosPacienteMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	mostrarPanelBuscarTurnosPorPaciente(); 
+            }
+        });
+        menuTurnos.add(turnosMenuItem);
+        menuTurnos.add(buscarTurnosMenuItem); 
+        menuTurnos.add(buscarTurnosPacienteMenuItem);
+
         
+        // menu de los reportes
+        JMenu menuReportes = new JMenu("Reportes");
+        JMenuItem reporteCobroMenuItem = new JMenuItem("Reporte de cobro de medico");
+        reporteCobroMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		System.out.println("Hola");
+        		mostrarPanelReporteCobro();
+        	}
+        });
+        menuReportes.add(reporteCobroMenuItem);
+
+        
+        // Agrego todo al menu bar
         menuBar.add(menuMedicos);
         menuBar.add(menuPacientes);
         menuBar.add(menuTurnos);
+        menuBar.add(menuReportes);
         frame.setJMenuBar(menuBar);
 	}
 	
@@ -168,5 +195,21 @@ public class PanelManager {
         frame.getContentPane().validate();
         frame.getContentPane().repaint();
     }
+    
+    public void mostrarPanelBuscarTurnosPorPaciente() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(panelBusquedaTurnosPaciente);
+        frame.getContentPane().validate();
+        frame.getContentPane().repaint();
+    }
+    
+    public void mostrarPanelReporteCobro() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(panelReporteCobro);
+        frame.getContentPane().validate();
+        frame.getContentPane().repaint();
+    }
+
+
 
 }

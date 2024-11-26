@@ -109,7 +109,26 @@ public class TurnoService implements Service<Turno> {
         	throw new ServiceException("Error obteniendo turnos de medico", e);
         }
     }
-
     
+    public List<String[]> obtenerTurnosPorPaciente(String dniPaciente) throws ServiceException {
+    	try {
+    		return dao.obtenerTurnosPorPaciente(dniPaciente);
+        } catch (DAOException e) {
+            throw new ServiceException("Error al obtener los turnos del paciente", e);
+        }
+    }
+    
+    public double calcularCobroEntreFechas(String matriculaMedico, LocalDate fechaInicio, LocalDate fechaFin) throws ServiceException {
+    	MedicoService medicoService = new MedicoService();
+		if (medicoService.get(matriculaMedico) == null) {
+			throw new ServiceException("No existe medico con esa matricula");
+		}
+        try {
+            return dao.calcularCobroEntreFechas(matriculaMedico, fechaInicio, fechaFin);
+        } catch (DAOException e) {
+            throw new ServiceException("Error al calcular el total cobrado por el médico entre las fechas", e);
+        }
+    }
+  
 
 }

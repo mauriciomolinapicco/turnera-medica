@@ -22,4 +22,8 @@ public interface TurnoDAO {
     boolean existeTurnoEnFecha(LocalDateTime fechaHora, String matriculaMedico) throws DAOException;
 
 	List<String[]> obtenerNombresYHorasPorFecha(String matriculaMedico, LocalDate fecha) throws DAOException;
+
+	List<String[]> obtenerTurnosPorPaciente(String dniPaciente) throws DAOException;
+
+	double calcularCobroEntreFechas(String matriculaMedico, LocalDate fechaInicio, LocalDate fechaFin) throws DAOException;
 }

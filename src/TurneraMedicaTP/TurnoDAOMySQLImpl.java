@@ -198,28 +198,63 @@ public class TurnoDAOMySQLImpl implements TurnoDAO {
         return resultados;
     }
 
-//  @Override
-//  public List<Turno> getTurnosByMedico(String matriculaMedico) throws DAOException {
-//      List<Turno> turnos = new ArrayList<>();
-//      String query = "SELECT * FROM turnos WHERE matriculaMedico = ?";
-//
-//      try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-//          stmt.setString(1, matriculaMedico);
-//          ResultSet rs = stmt.executeQuery();
-//          while (rs.next()) {
-//              Turno turno = new Turno(
-//                  rs.getInt("id"),
-//                  new Medico(rs.getString("matriculaMedico"), "", "", 0), 
-//                  new Paciente(rs.getString("dniPaciente"), "", "", 0),  
-//                  rs.getTimestamp("fechaHora").toLocalDateTime()
-//              );
-//              turnos.add(turno);
-//          }
-//      } catch (SQLException e) {
-//          throw new DAOException("Error al obtener los turnos del médico", e);
-//      }
-//      return turnos;
-//  }
+    public List<String[]> obtenerTurnosPorPaciente(String dniPaciente) throws DAOException {
+        String sql = "SELECT m.nombreCompleto, t.fechaHora " +
+                     "FROM turnos t " +
+                     "JOIN medicos m ON t.matriculaMedico = m.matricula " +
+                     "WHERE t.dniPaciente = ?";
+        List<String[]> resultados = new ArrayList<>();
+        Connection c = null;
+        ResultSet rs = null;
 
+        try {
+            c = ConnectionFactory.connect();
+            PreparedStatement stmt = c.prepareStatement(sql);
+            stmt.setString(1, dniPaciente);  
+            rs = stmt.executeQuery();
 
+            while (rs.next()) {
+                String nombreCompleto = rs.getString("nombreCompleto");
+                String fechaHora = rs.getTimestamp("fechaHora").toLocalDateTime().toString();  
+                resultados.add(new String[]{nombreCompleto, fechaHora});
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Error al obtener los turnos del paciente", e);
+        } finally {
+            ConnectionFactory.cerrarConexion(c);
+        }
+
+        return resultados;
+    }
+    
+    public double calcularCobroEntreFechas(String matriculaMedico, LocalDate fechaInicio, LocalDate fechaFin) throws DAOException {
+        String query = "SELECT COUNT(*) AS cantidad_turnos, m.precioConsulta " +
+                       "FROM turnos t " +
+                       "JOIN medicos m ON t.matriculaMedico = m.matricula " +
+                       "WHERE t.matriculaMedico = ? AND DATE(t.fechaHora) BETWEEN ? AND ? " +
+                       "GROUP BY m.precioConsulta";
+        Connection c = null;
+        ResultSet rs = null;
+
+        try {
+            c = ConnectionFactory.connect();
+            PreparedStatement stmt = c.prepareStatement(query);
+            stmt.setString(1, matriculaMedico);
+            stmt.setDate(2, Date.valueOf(fechaInicio));
+            stmt.setDate(3, Date.valueOf(fechaFin));
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                int cantidadTurnos = rs.getInt("cantidad_turnos");
+                double precioConsulta = rs.getDouble("precioConsulta");
+                return cantidadTurnos * precioConsulta;
+            } else {
+                return 0.0;
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Error al calcular el cobro entre fechas", e);
+        } finally {
+            ConnectionFactory.cerrarConexion(c);
+        }
+    }
 }
