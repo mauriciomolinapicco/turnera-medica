@@ -32,7 +32,7 @@ public class PanelTurnos extends PanelBase<Turno> {
 
     @Override
     protected String getFieldCuatroLabelText() {
-        return "Fecha y Hora";
+        return "Fecha y Hora YYYY-MM-DDThh:mm:ss";
     }
 
     @Override
@@ -84,7 +84,7 @@ public class PanelTurnos extends PanelBase<Turno> {
             comboMedicos.setRenderer(new ListCellRenderer<Medico>() {
                 @Override
                 public Component getListCellRendererComponent(JList<? extends Medico> list, Medico value, int index, boolean isSelected, boolean cellHasFocus) {
-                    JLabel label = new JLabel(value.getNombreCompleto()); // Aquí usas el método `getNombre()` de la clase `Medico`
+                    JLabel label = new JLabel(value.getNombreCompleto());
                     if (isSelected) {
                         label.setBackground(list.getSelectionBackground());
                         label.setForeground(list.getSelectionForeground());
@@ -113,7 +113,7 @@ public class PanelTurnos extends PanelBase<Turno> {
 
         this.add(separator);
         this.add(new JLabel("Seleccion de medico y paciente para crear turno"));
-        this.add(separator1);
+        this.add(separator1); 
 
         this.add(new JLabel("Seleccione paciente"));
         this.remove(nombreField);
@@ -176,8 +176,8 @@ public class PanelTurnos extends PanelBase<Turno> {
         return new TurnoService();
     }
 
-    @Override
-    protected void mostrarPanelBusqueda() {
-        // Implementar lógica para mostrar el panel de búsqueda si es necesario
-    }
+	@Override
+	protected void mostrarPanelBusqueda() {
+		// TODO Auto-generated method stub
+	}
 }

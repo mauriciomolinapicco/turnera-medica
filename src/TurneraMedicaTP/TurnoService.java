@@ -12,16 +12,25 @@ public class TurnoService implements Service<Turno> {
 
     @Override
     public void create(Turno turno) throws ServiceException {
-        if (turnoExiste(String.valueOf(turno.getId()))) {
-            throw new ServiceException("Ya existe un turno con el mismo ID.");
-        } else {
-            try {
-                dao.create(turno);
-            } catch (DAOException e) {
-            	e.printStackTrace();
-                throw new ServiceException("Hubo un error creando el turno", e);
-            }
-        }
+        try {
+			if (turnoExiste(String.valueOf(turno.getId()))) {
+			    throw new ServiceException("Ya existe un turno con el mismo ID.");
+			} 
+			
+			if (this.dao.existeTurnoEnFecha(turno.getFechaHora(), turno.getMedico().getMatricula())) {
+				throw new ServiceException("El medico esta ocupado en esa fecha y hora");
+			}
+			
+		    try {
+		        dao.create(turno);
+		    } catch (DAOException e) {
+		    	e.printStackTrace();
+		        throw new ServiceException("Hubo un error creando el turno", e);
+		    }
+			
+		} catch (DAOException e) {
+			throw new ServiceException("Hubo un error creando el turno", e);
+		}
     }
 
     @Override
