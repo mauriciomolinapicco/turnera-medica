@@ -30,6 +30,11 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     protected abstract String mensajeActualizado();
     protected abstract String mensajeBorrado();
     protected abstract Service<T> createService();
+    
+    protected JLabel nombreLbl;
+    protected JLabel idLbl;
+    protected JLabel fieldTresLbl;
+    protected JLabel fieldCuatroLbl;
 
     public PanelBase() {
         super();
