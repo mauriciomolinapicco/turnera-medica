@@ -1,4 +1,11 @@
 package TurneraMedicaTP;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,4 +99,17 @@ public class TurnoService implements Service<Turno> {
         }
         return turno == null ? false : true;
     }
+    
+    
+    public List<String[]> obtenerTurnosPorMedicoYFecha(String matriculaMedico, LocalDate fecha) throws ServiceException {
+        try {
+        	return dao.obtenerNombresYHorasPorFecha(matriculaMedico, fecha);
+        } catch (DAOException e) {
+        	e.printStackTrace();
+        	throw new ServiceException("Error obteniendo turnos de medico", e);
+        }
+    }
+
+    
+
 }

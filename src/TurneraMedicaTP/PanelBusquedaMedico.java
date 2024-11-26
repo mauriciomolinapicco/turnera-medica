@@ -1,7 +1,7 @@
 package TurneraMedicaTP;
 import javax.swing.*;
 
-public class PanelBusquedaMedico extends BusquedaPanel<Medico> {
+public class PanelBusquedaMedico extends PanelBusqueda<Medico> {
 
     public PanelBusquedaMedico(PanelManager m) {
         super(m);
@@ -31,5 +31,10 @@ public class PanelBusquedaMedico extends BusquedaPanel<Medico> {
 	@Override
 	protected String getLabel() {
 		return "Buscar medico por matricula";
+	}
+
+	@Override
+	protected String getErrorMessage() {
+		return "Medico no encontrado. Intente nuevamente";
 	}
 }

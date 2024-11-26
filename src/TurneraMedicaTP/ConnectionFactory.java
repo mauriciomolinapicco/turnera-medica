@@ -22,7 +22,6 @@ public class ConnectionFactory {
 			Class.forName(DB_DRIVER);
 			connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
 			connection.setAutoCommit(false);
-			System.out.println("conectado");
 		}  catch (ClassNotFoundException e) {
             e.printStackTrace();
             throw new DAOException("No se encontro el driver de la base de datos", e);

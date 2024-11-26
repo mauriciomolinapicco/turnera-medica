@@ -1,5 +1,6 @@
 package TurneraMedicaTP;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,8 +16,10 @@ public interface TurnoDAO {
     List<Turno> getAll() throws DAOException;
 
     // Obtener todos los turnos de un médico específico
-    List<Turno> getTurnosByMedico(String matriculaMedico) throws DAOException;
+    //List<Turno> getTurnosByMedico(String matriculaMedico) throws DAOException;
 
     // Verificar si existe un turno para el médico en la misma fecha y hora
     boolean existeTurnoEnFecha(LocalDateTime fechaHora, String matriculaMedico) throws DAOException;
+
+	List<String[]> obtenerNombresYHorasPorFecha(String matriculaMedico, LocalDate fecha) throws DAOException;
 }

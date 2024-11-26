@@ -67,7 +67,7 @@ public class PanelPacientes extends PanelBase<Paciente> {
 
 	@Override
 	protected void mostrarPanelBusqueda() {
-		panelManager.mostrarPanelBusquedaMedicos();
+		panelManager.mostrarPanelBusquedaPacientes();
 	}
 
 	@Override

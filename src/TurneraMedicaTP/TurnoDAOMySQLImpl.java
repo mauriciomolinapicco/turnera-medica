@@ -1,6 +1,7 @@
 package TurneraMedicaTP;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,47 +128,7 @@ public class TurnoDAOMySQLImpl implements TurnoDAO {
         return turnos;
     }
 
-    
-    @Override
-    public List<Turno> getTurnosByMedico(String matriculaMedico) throws DAOException {
-        List<Turno> turnos = new ArrayList<>();
-        String query = "SELECT * FROM turnos WHERE matriculaMedico = ?";
 
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setString(1, matriculaMedico);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                Turno turno = new Turno(
-                    rs.getInt("id"),
-                    new Medico(rs.getString("matriculaMedico"), "", "", 0), 
-                    new Paciente(rs.getString("dniPaciente"), "", "", 0),  
-                    rs.getTimestamp("fechaHora").toLocalDateTime()
-                );
-                turnos.add(turno);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Error al obtener los turnos del médico", e);
-        }
-        return turnos;
-    }
-
-//    @Override
-//    public boolean existeTurno(Turno turno) throws DAOException {
-//        String query = "SELECT COUNT(*) FROM turnos WHERE matriculaMedico = ? AND fechaHora = ?";
-//        boolean existe = false;
-//
-//        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-//            stmt.setString(1, turno.getMedico().getMatricula());
-//            stmt.setTimestamp(2, Timestamp.valueOf(turno.getFechaHora()));
-//            ResultSet rs = stmt.executeQuery();
-//            if (rs.next() && rs.getInt(1) > 0) {
-//                existe = true;
-//            }
-//        } catch (SQLException e) {
-//            throw new DAOException("Error al verificar si existe el turno", e);
-//        }
-//        return existe;
-//    }
     public boolean existeTurnoEnFecha(LocalDateTime fechaHora, String matriculaMedico) throws DAOException {
         String query = "SELECT COUNT(*) FROM turnos WHERE matriculaMedico = ? AND fechaHora = ?";
         boolean ocupado = false;
@@ -206,5 +167,59 @@ public class TurnoDAOMySQLImpl implements TurnoDAO {
             return null;
         }
     }	
+    
+    public List<String[]> obtenerNombresYHorasPorFecha(String matriculaMedico, LocalDate fecha) throws DAOException {
+    	String sql = "SELECT p.nombreCompleto, t.fechaHora " +
+                "FROM turnos t " +
+                "JOIN pacientes p ON t.dniPaciente = p.dni " + 
+                "WHERE t.matriculaMedico = ? AND DATE(t.fechaHora) = ?";
+        List<String[]> resultados = new ArrayList<>();
+        Connection c = null;
+        ResultSet rs = null;
+
+        try {
+            c = ConnectionFactory.connect();
+            PreparedStatement stmt = c.prepareStatement(sql);
+            stmt.setString(1, matriculaMedico);
+            stmt.setDate(2, Date.valueOf(fecha));
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                String nombreCompleto = rs.getString("nombreCompleto");
+                String hora = rs.getTimestamp("fechaHora").toLocalDateTime().toLocalTime().toString();
+                resultados.add(new String[]{nombreCompleto, hora});
+            }
+        } catch (SQLException e) {
+            throw new DAOException("Error al obtener los nombres y horas de los turnos", e);
+        } finally {
+            ConnectionFactory.cerrarConexion(c);
+        }
+
+        return resultados;
+    }
+
+//  @Override
+//  public List<Turno> getTurnosByMedico(String matriculaMedico) throws DAOException {
+//      List<Turno> turnos = new ArrayList<>();
+//      String query = "SELECT * FROM turnos WHERE matriculaMedico = ?";
+//
+//      try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
+//          stmt.setString(1, matriculaMedico);
+//          ResultSet rs = stmt.executeQuery();
+//          while (rs.next()) {
+//              Turno turno = new Turno(
+//                  rs.getInt("id"),
+//                  new Medico(rs.getString("matriculaMedico"), "", "", 0), 
+//                  new Paciente(rs.getString("dniPaciente"), "", "", 0),  
+//                  rs.getTimestamp("fechaHora").toLocalDateTime()
+//              );
+//              turnos.add(turno);
+//          }
+//      } catch (SQLException e) {
+//          throw new DAOException("Error al obtener los turnos del médico", e);
+//      }
+//      return turnos;
+//  }
+
 
 }

@@ -17,8 +17,12 @@ public class PanelManager {
 	private JFrame frame;
 	private PanelMedicos panelMedicos;
 	private PanelBusquedaMedico panelBusquedaMedicos;
+	private PanelBusquedaPacientes panelBusquedaPacientes;
 	private PanelPacientes panelPacientes;
 	private PanelTurnos panelTurnos;
+	
+    private PanelBuscarTurnos panelBusquedaTurnos; // NUEVO: Panel para buscar turnos
+
 	
 	public PanelManager() {
 	}
@@ -27,12 +31,18 @@ public class PanelManager {
 		panelMedicos = new PanelMedicos(this);
 		panelPacientes = new PanelPacientes(this);
 		panelBusquedaMedicos = new PanelBusquedaMedico(this);
+		panelBusquedaPacientes= new PanelBusquedaPacientes(this);
 		panelTurnos = new PanelTurnos(this);
+		panelBusquedaTurnos = new PanelBuscarTurnos(this);
 		
 		panelMedicos.armarPanel();
 		panelBusquedaMedicos.armarPanel();
+		panelBusquedaPacientes.armarPanel();
 		panelPacientes.armarPanel();
 		panelTurnos.armarPanel();
+		panelBusquedaTurnos.armarPanel();
+		
+		
 		
 		panelMedicos.setBackground(new Color(250,250,250));
 		
@@ -73,6 +83,15 @@ public class PanelManager {
         	}
         });
         menuPacientes.add(pacienteMenuItem);
+        
+        JMenuItem busquedaPacientesMenuItem = new JMenuItem("Buscar paciente");
+        busquedaPacientesMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		mostrarPanelBusquedaPacientes();
+        	}
+        });
+        menuPacientes.add(busquedaPacientesMenuItem);
+
 
         JMenu menuTurnos = new JMenu("Turnos");
         JMenuItem turnosMenuItem = new JMenuItem("Panel de turnos");
@@ -82,6 +101,17 @@ public class PanelManager {
         	}
         });
         menuTurnos.add(turnosMenuItem);
+        
+        
+        JMenuItem buscarTurnosMenuItem = new JMenuItem("Buscar turnos");
+        buscarTurnosMenuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mostrarPanelBuscarTurnos(); // Llama al nuevo método
+            }
+        });
+        menuTurnos.add(turnosMenuItem);
+        menuTurnos.add(buscarTurnosMenuItem); // NUEVO: Añadir al menú
+
 
         
         
@@ -117,10 +147,26 @@ public class PanelManager {
         frame.getContentPane().repaint();
     }
     
+    public void mostrarPanelBusquedaPacientes() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(panelBusquedaPacientes);
+        frame.getContentPane().validate();
+        frame.getContentPane().repaint();
+    }
+
+    
     public void mostrarPanelTurnos() {
     	frame.getContentPane().removeAll();
     	frame.getContentPane().add(panelTurnos);
     	frame.getContentPane().validate();
     	frame.getContentPane().repaint();
     }
+    
+    public void mostrarPanelBuscarTurnos() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(panelBusquedaTurnos);
+        frame.getContentPane().validate();
+        frame.getContentPane().repaint();
+    }
+
 }
