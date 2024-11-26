@@ -37,15 +37,22 @@ public class PanelMedicos extends PanelBase<Medico> {
     }
 
     @Override
-    protected Medico createEntityFromFields() {
+    protected Medico createEntityFromFields() throws ServiceException {
         String nombre = nombreField.getText();
         String matricula = idField.getText();
         String especialidad = fieldTres.getText();        
         double precioConsulta = 0.0;
+		
+		if (nombre == null || nombre.isBlank() ||
+			    matricula == null || matricula.isBlank() ||
+			    especialidad == null || especialidad.isBlank()) {
+			    throw new ServiceException("Todos los campos de texto deben estar completos.");
+			}
+		
 		try {
 			precioConsulta = Double.parseDouble(fieldCuatro.getText());
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(PanelMedicos.this, "Ingrese un número válido para el precio", "Error", JOptionPane.ERROR_MESSAGE);
+            throw new ServiceException("Ingrese un número válido para el precio");
         }
 
         return new Medico(nombre, matricula, especialidad, precioConsulta);

@@ -24,7 +24,7 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     protected abstract String getFieldTresLabelText();
     protected abstract String getFieldCuatroLabelText();
     protected abstract BaseTableModel<T> createTableModel();
-    protected abstract T createEntityFromFields();
+    protected abstract T createEntityFromFields() throws ServiceException;
     protected abstract String getEntityId(T entity);
     protected abstract String mensajeCreado();
     protected abstract String mensajeActualizado();
@@ -93,10 +93,12 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     
     
     public void actionPerformed(ActionEvent e) {
+    	// CREAR 
     	if (e.getSource() == botonCrear) {
-    		T entity = createEntityFromFields();
+    		//T entity = null;
     		Service<T> service = createService();
     		try {
+    			T entity = createEntityFromFields();
     			service.create(entity);
     			JOptionPane.showMessageDialog(this, mensajeCreado());
                 modelo.getContenido().add(entity);
@@ -104,8 +106,16 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     		} catch (ServiceException e1) {
     			JOptionPane.showMessageDialog(this, e1.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
     		}
+    		
+    	// ACTUALIZAR
     	} else if (e.getSource() == botonActualizar) {
-    		T entity = createEntityFromFields();
+    		T entity = null;
+			try {
+				entity = createEntityFromFields();
+			} catch (ServiceException e1) {
+				JOptionPane.showMessageDialog(this, e1.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
+				e1.printStackTrace();
+			}
     		Service<T> service = createService();
     		try {
     			service.update(entity);
@@ -114,6 +124,8 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     		} catch (ServiceException e1) {
     			JOptionPane.showMessageDialog(this, e1.getMessage(), "Error",JOptionPane.ERROR_MESSAGE);
     		}
+    	
+    	// BUSCAR
     	}  else if (e.getSource() == botonBuscar) {
             mostrarPanelBusqueda();
         } else if (e.getSource() == borrarBtn) {

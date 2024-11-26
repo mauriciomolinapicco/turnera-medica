@@ -37,16 +37,24 @@ public class PanelPacientes extends PanelBase<Paciente> {
     }
 
     @Override
-    protected Paciente createEntityFromFields() {
+    protected Paciente createEntityFromFields() throws ServiceException {
         String nombreCompleto = nombreField.getText();
         String dni = idField.getText();
         String fichaMedica = fieldTres.getText();        
         String textoTel = fieldCuatro.getText();
+        
+        if (nombreCompleto == null || nombreCompleto.isBlank() ||
+        	    dni == null || dni.isBlank() ||
+        	    fichaMedica == null || fichaMedica.isBlank() ||
+        	    textoTel == null || textoTel.isBlank()) {
+        	    throw new ServiceException("Todos los campos deben estar completos.");
+        	}
+
         int telefono = 0;
         try {
         	telefono = Integer.parseInt(textoTel);
         } catch(NumberFormatException e) {
-        	 JOptionPane.showMessageDialog(PanelPacientes.this, "Ingrese un número válido para el telefono", "Error", JOptionPane.ERROR_MESSAGE);
+        	 throw new ServiceException("Ingrese un número válido para el telefono");
         }
         
         return new Paciente(dni, nombreCompleto, fichaMedica, telefono);

@@ -18,6 +18,7 @@ public class PanelManager {
 	private PanelMedicos panelMedicos;
 	private PanelBusquedaMedico panelBusquedaMedicos;
 	private PanelPacientes panelPacientes;
+	private PanelTurnos panelTurnos;
 	
 	public PanelManager() {
 	}
@@ -26,10 +27,12 @@ public class PanelManager {
 		panelMedicos = new PanelMedicos(this);
 		panelPacientes = new PanelPacientes(this);
 		panelBusquedaMedicos = new PanelBusquedaMedico(this);
+		panelTurnos = new PanelTurnos(this);
 		
 		panelMedicos.armarPanel();
 		panelBusquedaMedicos.armarPanel();
 		panelPacientes.armarPanel();
+		panelTurnos.armarPanel();
 		
 		panelMedicos.setBackground(new Color(250,250,250));
 		
@@ -70,9 +73,21 @@ public class PanelManager {
         	}
         });
         menuPacientes.add(pacienteMenuItem);
+
+        JMenu menuTurnos = new JMenu("Turnos");
+        JMenuItem turnosMenuItem = new JMenuItem("Panel de turnos");
+        turnosMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		mostrarPanelTurnos();
+        	}
+        });
+        menuTurnos.add(turnosMenuItem);
+
+        
         
         menuBar.add(menuMedicos);
         menuBar.add(menuPacientes);
+        menuBar.add(menuTurnos);
         frame.setJMenuBar(menuBar);
 	}
 	
@@ -100,5 +115,12 @@ public class PanelManager {
         frame.getContentPane().add(panelBusquedaMedicos);
         frame.getContentPane().validate();
         frame.getContentPane().repaint();
+    }
+    
+    public void mostrarPanelTurnos() {
+    	frame.getContentPane().removeAll();
+    	frame.getContentPane().add(panelTurnos);
+    	frame.getContentPane().validate();
+    	frame.getContentPane().repaint();
     }
 }
