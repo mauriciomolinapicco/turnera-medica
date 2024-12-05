@@ -32,7 +32,7 @@ public class PanelTurnos extends PanelBase<Turno> {
 
     @Override
     protected String getFieldCuatroLabelText() {
-        return "Fecha y Hora YYYY-MM-DDThh:mm:ss";
+        return "Fecha y Hora YYYY-MM-DD hh:mm:ss";
     }
 
     @Override
@@ -137,6 +137,7 @@ public class PanelTurnos extends PanelBase<Turno> {
         LocalDateTime fechaParseada = null;
         Integer id = 0;
         try {
+            fechaHora = fechaHora.replace(" ", "T");
         	fechaParseada = LocalDateTime.parse(fechaHora);
         	id = Integer.parseInt(turnoId);
         } catch (Exception e) {

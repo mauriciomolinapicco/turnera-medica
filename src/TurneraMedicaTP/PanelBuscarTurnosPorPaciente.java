@@ -59,6 +59,12 @@ public class PanelBuscarTurnosPorPaciente extends JPanel {
             }
 
             List<String[]> turnos = service.obtenerTurnosPorPaciente(dniPaciente);
+            
+            if (turnos.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se encontraron turnos para el paciente con DNI: " + dniPaciente, "Información", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
 
             String[] columnas = {"Medico", "Fecha"};
             Object[][] datos = new Object[turnos.size()][2];

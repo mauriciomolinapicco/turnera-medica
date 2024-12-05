@@ -40,7 +40,7 @@ public abstract class PanelBusqueda<T> extends JPanel {
                 if (entity != null) {
                     String string = getEntityDetails(entity);
                     JOptionPane.showMessageDialog(PanelBusqueda.this, string);
-                    panelManager.mostrarPanelMedicos(); 
+                    //panelManager.mostrarPanelMedicos(); 
                 } else {
                     JOptionPane.showMessageDialog(PanelBusqueda.this, getErrorMessage());
                 }

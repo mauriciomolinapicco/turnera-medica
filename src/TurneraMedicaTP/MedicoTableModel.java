@@ -13,7 +13,7 @@ public class MedicoTableModel extends BaseTableModel<Medico>{
 	private static final int COLUMNA_PRECIO = 3;
 	
 	public String[] nombreColumnas = {"Nombre", "Matricula", "Especialidad", "Precio Consulta"};
-	public Class[] tiposColumnas = {String.class, String.class, String.class, Double.class};
+	public Class[] tiposColumnas = {String.class, String.class, String.class, String.class};
 	
 	private List<Medico> contenido;
 	
@@ -58,7 +58,7 @@ public class MedicoTableModel extends BaseTableModel<Medico>{
 			result = m.getEspecialidad();
 			break;
 		case COLUMNA_PRECIO:
-			result = m.getPrecioConsulta();
+		    result = "$ " + m.getPrecioConsulta();
 			break;
 		default:
 			result = "";

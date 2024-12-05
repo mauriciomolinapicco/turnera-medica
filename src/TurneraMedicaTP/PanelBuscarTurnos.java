@@ -59,6 +59,11 @@ public class PanelBuscarTurnos extends JPanel {
         try {
             LocalDate fechaLocal = LocalDate.parse(fecha.trim());
             List<String[]> turnos = service.obtenerTurnosPorMedicoYFecha(matriculaMedico, fechaLocal);
+            
+            if (turnos.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No se encontraron turnos para la matrícula: " + matriculaMedico + " en la fecha: " + fecha, "Información", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
 
             String[] columnas = {"Paciente", "Hora"};
             Object[][] datos = new Object[turnos.size()][2];

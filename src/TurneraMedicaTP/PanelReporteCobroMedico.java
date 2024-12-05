@@ -82,20 +82,16 @@ public class PanelReporteCobroMedico extends JPanel {
         String fechaFinTexto = textFieldFechaFin.getText().trim();
 
         try {
-            // Convertir las fechas
             LocalDate fechaInicio = LocalDate.parse(fechaInicioTexto);
             LocalDate fechaFin = LocalDate.parse(fechaFinTexto);
 
-            // Validar rango de fechas
             if (fechaFin.isBefore(fechaInicio)) {
                 JOptionPane.showMessageDialog(this, "La fecha de fin no puede ser anterior a la fecha de inicio.", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            // Calcular cobro usando el servicio
             double totalCobro = turnoService.calcularCobroEntreFechas(matricula, fechaInicio, fechaFin);
 
-            // Mostrar resultado
             labelResultado.setText("   El médico con matrícula " + matricula + " cobró un total de: $" + totalCobro);
         } catch (DateTimeParseException e) {
             JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Por favor, use yyyy-mm-dd.", "Error", JOptionPane.ERROR_MESSAGE);

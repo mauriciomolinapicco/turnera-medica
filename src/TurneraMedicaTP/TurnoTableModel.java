@@ -59,7 +59,7 @@ public class TurnoTableModel extends BaseTableModel<Turno> {
             result = (turno.getPaciente() != null) ? turno.getPaciente().getNombreCompleto() : "No asignado"; 
             break;
         case COLUMNA_FECHA_HORA:
-            result = turno.getFechaHora(); 
+            result = turno.getFechaHora().toString().replace("T", " "); 
             break;
         default:
             result = "";

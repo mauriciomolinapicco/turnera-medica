@@ -73,7 +73,7 @@ public class TurnoService implements Service<Turno> {
     @Override
     public void delete(String id) throws ServiceException {
         try {
-            int idInt = Integer.parseInt(id); // Convertimos el id a int antes de pasar al DAO
+            int idInt = Integer.parseInt(id); // convierto el id a int antes de pasar al do
             dao.delete(idInt);
         } catch (NumberFormatException e) {
             throw new ServiceException("El ID proporcionado no es válido: " + id, e);
