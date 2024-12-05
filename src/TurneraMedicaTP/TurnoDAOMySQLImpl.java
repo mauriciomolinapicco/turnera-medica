@@ -91,13 +91,11 @@ public class TurnoDAOMySQLImpl implements TurnoDAO {
 
     @Override
     public void delete(int id) throws DAOException {
-        String query = "DELETE FROM turnos WHERE id = ?";
-
-        try (Connection conn = getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
+        try {
+            String sql = "DELETE FROM turnos WHERE id = " + id;
+            ConnectionFactory.transaccion(sql); 
         } catch (SQLException e) {
-            throw new DAOException("Error al eliminar el turno", e);
+            throw new DAOException("Error al eliminar el turno con ID: " + id, e);
         }
     }
     
@@ -257,4 +255,49 @@ public class TurnoDAOMySQLImpl implements TurnoDAO {
             ConnectionFactory.cerrarConexion(c);
         }
     }
+    
+    public List<String[]> reporteCobroAllMedicos(LocalDate fechaInicio, LocalDate fechaFin) throws DAOException {
+    	List<String[]> resultados = new ArrayList<>();
+    	MedicoService medicoService= new MedicoService();
+    	List<Medico> listaMedicos = null;
+    	try {
+			listaMedicos = medicoService.getAll();
+		} catch (ServiceException e) {
+			e.printStackTrace();
+		}
+    	for (Medico medico : listaMedicos) {
+    		String[] datos = new String[3];
+    		datos[0] = medico.getMatricula();
+    		datos[1] = medico.getNombreCompleto();
+    		datos[2] = String.valueOf(calcularCobroEntreFechas(medico.getMatricula(), fechaInicio, fechaFin));
+    		resultados.add(datos);
+    	}
+    	
+    	return resultados;
+    }
+    
+    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

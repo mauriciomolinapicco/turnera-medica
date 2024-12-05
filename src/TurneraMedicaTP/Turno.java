@@ -15,12 +15,6 @@ public class Turno {
         this.fechaHora = fechaHora;
     }
 
-    public Turno() {
-        this.id = 0;  // o cualquier valor predeterminado adecuado
-        this.paciente = null;
-        this.medico = null;
-        this.fechaHora = null;  // o un valor predeterminado si es necesario
-    }
 
 	public int getId() {
         return id;

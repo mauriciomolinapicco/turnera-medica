@@ -133,6 +133,8 @@ public abstract class PanelBase<T> extends JPanel implements ActionListener {
     	// BUSCAR
     	}  else if (e.getSource() == botonBuscar) {
             mostrarPanelBusqueda();
+            
+        // BORRAR
         } else if (e.getSource() == borrarBtn) {
         	int filaSeleccionada = tabla.getSelectedRow();
             if (filaSeleccionada >= 0) {

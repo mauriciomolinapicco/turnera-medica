@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
@@ -64,7 +66,7 @@ public class PanelBuscarTurnosPorPaciente extends JPanel {
             for (int i = 0; i < turnos.size(); i++) {
                 String[] turno = turnos.get(i);
                 datos[i][0] = turno[0]; 
-                datos[i][1] = turno[1]; 
+                datos[i][1] = formatearFechaHora(turno[1]); 
             }
 
             tablaTurnos.setModel(new DefaultTableModel(datos, columnas));
@@ -72,4 +74,15 @@ public class PanelBuscarTurnosPorPaciente extends JPanel {
             JOptionPane.showMessageDialog(this, "Error al obtener los turnos: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
+    private String formatearFechaHora(String fechaHora) {
+        try {
+            LocalDateTime fecha = LocalDateTime.parse(fechaHora); 
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"); 
+            return fecha.format(formatter); 
+        } catch (DateTimeParseException e) {
+            return fechaHora;
+        }
+    }
+
 }

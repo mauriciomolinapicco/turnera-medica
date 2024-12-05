@@ -51,11 +51,10 @@ public class PanelTurnos extends PanelBase<Turno> {
             pacientes = pacienteService.getAll();
             comboPacientes = new JComboBox<>(pacientes.toArray(new Paciente[0]));
 
-            // Configurar el renderer para mostrar solo el nombre del paciente
             comboPacientes.setRenderer(new ListCellRenderer<Paciente>() {
                 @Override
                 public Component getListCellRendererComponent(JList<? extends Paciente> list, Paciente value, int index, boolean isSelected, boolean cellHasFocus) {
-                    JLabel label = new JLabel(value.getNombreCompleto()); // Aquí usas el método `getNombre()` de la clase `Paciente`
+                    JLabel label = new JLabel(value.getNombreCompleto()); 
                     if (isSelected) {
                         label.setBackground(list.getSelectionBackground());
                         label.setForeground(list.getSelectionForeground());
@@ -80,7 +79,6 @@ public class PanelTurnos extends PanelBase<Turno> {
             medicos = medicoService.getAll();
             comboMedicos = new JComboBox<>(medicos.toArray(new Medico[0]));
 
-            // Configurar el renderer para mostrar solo el nombre del médico
             comboMedicos.setRenderer(new ListCellRenderer<Medico>() {
                 @Override
                 public Component getListCellRendererComponent(JList<? extends Medico> list, Medico value, int index, boolean isSelected, boolean cellHasFocus) {
@@ -102,7 +100,6 @@ public class PanelTurnos extends PanelBase<Turno> {
             comboMedicos = new JComboBox<>();
         }
         
-        //Seccion para elegir medico y paciente
         
         JSeparator separator = new JSeparator();
         separator.setOrientation(SwingConstants.HORIZONTAL); //hacer que sea horizontal
@@ -137,23 +134,22 @@ public class PanelTurnos extends PanelBase<Turno> {
             throw new ServiceException("Todos los campos deben estar completos.");
         }
 
-        Turno turno = new Turno();
-        turno.setPaciente(paciente);
-        turno.setId(Integer.parseInt(turnoId));
-        turno.setMedico(medico);
-
+        LocalDateTime fechaParseada = null;
+        Integer id = 0;
         try {
-            turno.setFechaHora(LocalDateTime.parse(fechaHora));
+        	fechaParseada = LocalDateTime.parse(fechaHora);
+        	id = Integer.parseInt(turnoId);
         } catch (Exception e) {
-            throw new ServiceException("Fecha - hora incorrecta");
+            throw new ServiceException("Error en el formato de la fecha/hora");
         }
 
+        Turno turno = new Turno(id, medico, paciente, fechaParseada);
         return turno;
     }
 
     @Override
-    protected String getEntityId(Turno entity) {
-        return String.valueOf(entity.getId());
+    protected String getEntityId(Turno turno) {
+        return String.valueOf(turno.getId());
     }
 
     @Override
@@ -178,6 +174,7 @@ public class PanelTurnos extends PanelBase<Turno> {
 
 	@Override
 	protected void mostrarPanelBusqueda() {
+		panelManager.mostrarPanelBuscarTurnos();
 		// TODO Auto-generated method stub
 	}
 }

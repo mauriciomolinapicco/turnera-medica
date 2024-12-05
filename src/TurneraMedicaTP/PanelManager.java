@@ -22,7 +22,8 @@ public class PanelManager {
 	private PanelTurnos panelTurnos;	
     private PanelBuscarTurnos panelBusquedaTurnos; 
     private PanelBuscarTurnosPorPaciente panelBusquedaTurnosPaciente;
-    private PanelCalcularCobroMedico panelReporteCobro;
+    private PanelReporteCobroMedico panelReporteCobro;
+    private PanelReporteCobroMedicos panelReporteCobroTodos;
 
 	
 	public PanelManager() {
@@ -36,7 +37,8 @@ public class PanelManager {
 		panelTurnos = new PanelTurnos(this);
 		panelBusquedaTurnos = new PanelBuscarTurnos(this);
 		panelBusquedaTurnosPaciente = new PanelBuscarTurnosPorPaciente(this);
-		panelReporteCobro = new PanelCalcularCobroMedico(this);
+		panelReporteCobro = new PanelReporteCobroMedico(this);
+		panelReporteCobroTodos = new PanelReporteCobroMedicos(this);
 		
 		panelMedicos.armarPanel();
 		panelBusquedaMedicos.armarPanel();
@@ -46,6 +48,7 @@ public class PanelManager {
 		panelBusquedaTurnos.armarPanel();
 		panelBusquedaTurnosPaciente.armarPanel();
 		panelReporteCobro.armarPanel();
+		panelReporteCobroTodos.armarPanel();
 		
 		
 		panelMedicos.setBackground(new Color(250,250,250));
@@ -130,14 +133,22 @@ public class PanelManager {
         
         // menu de los reportes
         JMenu menuReportes = new JMenu("Reportes");
-        JMenuItem reporteCobroMenuItem = new JMenuItem("Reporte de cobro de medico");
+        JMenuItem reporteCobroMenuItem = new JMenuItem("Reporte de cobro de un medico");
         reporteCobroMenuItem.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		System.out.println("Hola");
         		mostrarPanelReporteCobro();
         	}
         });
         menuReportes.add(reporteCobroMenuItem);
+        
+        JMenuItem reporteCobroTodosMenuItem = new JMenuItem("Reporte de cobro de todos los medicos");
+        reporteCobroTodosMenuItem.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		mostrarPanelReporteCobroTodos();
+        	}
+        });
+        menuReportes.add(reporteCobroTodosMenuItem);
+
 
         
         // Agrego todo al menu bar
@@ -206,6 +217,13 @@ public class PanelManager {
     public void mostrarPanelReporteCobro() {
         frame.getContentPane().removeAll();
         frame.getContentPane().add(panelReporteCobro);
+        frame.getContentPane().validate();
+        frame.getContentPane().repaint();
+    }
+    
+    public void mostrarPanelReporteCobroTodos() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(panelReporteCobroTodos);
         frame.getContentPane().validate();
         frame.getContentPane().repaint();
     }

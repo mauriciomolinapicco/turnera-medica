@@ -58,6 +58,9 @@ public class TurnoService implements Service<Turno> {
     public void update(Turno turno) throws ServiceException {
         if (turnoExiste(String.valueOf(turno.getId()))) {
             try {
+            	if (this.dao.existeTurnoEnFecha(turno.getFechaHora(), turno.getMedico().getMatricula())) {
+    				throw new ServiceException("El medico esta ocupado en esa fecha y hora");
+    			}
                 dao.update(turno);
             } catch (DAOException e) {
                 throw new ServiceException("Error actualizando el turno", e);
@@ -129,6 +132,15 @@ public class TurnoService implements Service<Turno> {
             throw new ServiceException("Error al calcular el total cobrado por el médico entre las fechas", e);
         }
     }
+    
+    public List<String[]> reporteCobroAllMedicos(LocalDate fechaInicio, LocalDate fechaFin) throws ServiceException {
+    	try {
+    		return dao.reporteCobroAllMedicos(fechaInicio, fechaFin);
+        } catch (DAOException e) {
+            throw new ServiceException("Error al obtener el reporte de cobro de los medicos", e);
+        }
+    }
+
   
 
 }

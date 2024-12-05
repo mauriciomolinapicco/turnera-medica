@@ -26,4 +26,6 @@ public interface TurnoDAO {
 	List<String[]> obtenerTurnosPorPaciente(String dniPaciente) throws DAOException;
 
 	double calcularCobroEntreFechas(String matriculaMedico, LocalDate fechaInicio, LocalDate fechaFin) throws DAOException;
+	
+	List<String[]> reporteCobroAllMedicos(LocalDate fechaInicio, LocalDate fechaFin) throws DAOException;
 }

@@ -57,6 +57,13 @@ public class PanelPacientes extends PanelBase<Paciente> {
         	 throw new ServiceException("Ingrese un número válido para el telefono");
         }
         
+        try {
+            Integer.parseInt(dni);
+        } catch (NumberFormatException e) {
+            throw new ServiceException("El DNI debe ser un número válido.");
+        }
+
+        
         return new Paciente(dni, nombreCompleto, fichaMedica, telefono);
     }
 
